@@ -1,3 +1,9 @@
+"""
+Python version 3.12.6
+Computational Finance - Exercise Set 1
+Exercise 3, Effect of standardization
+@author: Francesco Giraudo - VU Amsterdam
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm

@@ -1,0 +1,59 @@
+\section{Exercise 2}
+
+\subsection{}
+
+I want to find the dynamics of $Y_1(t) := \mu S^2(t)$ where $S(t)$ is a geometric Brownian motion defined as follows
+
+\begin{equation}
+    dS(t) =  \mu S(t) + \sigma S(t)dW(t) \label{eq:GBMdef2}
+\end{equation}
+
+with $\mu$ and $\sigma$ are constant parameters and $W(t)$ the Wiener process. \\ 
+
+Let consider the function $g(t,S(t)) = \mu S^2(t) = Y_1(t)$, applying Ito's lemma I obtain
+
+\begin{align}
+    dg(t,S(t)) &= \frac{\partial g}{\partial t} dt +
+                    \frac{\partial g}{\partial S(t)} dS(t) +
+                    \frac{1}{2} \frac{\partial^2g}{\partial S^2(t)} (dS(t))^2\label{eq:itoformula}\\
+    dY_1(t) &= \, 0 + 2\mu S(t)\,dS(t) + \frac{1}{2}\,2\mu\,(dS(t))^2 \;=\; 2\mu S(t) dS(t) + \mu (dS(t))^2 \label{eq:line2}
+\end{align}
+
+Now, let's analyze $(dS(t))^2$. Using the definition of GBM in (\ref{eq:GBMdef2}) and Ito's multiplication table rule for simplifying the terms, it follows that:
+
+\begin{align}
+    (dS(t))^2 &= [\mu S(t)dt + \sigma S(t)dW(t)]^2 \notag\\
+              &= (\mu S(t))^2 dtdt + 2\sigma S(t) dW(t) dt + (\sigma S(t))^2 dW(t)dW(t) \notag \\
+              &= 0 + 0 + \sigma^2 S^2(t) dt \label{eq:dS2t} 
+\end{align}
+
+Substituting (\ref{eq:dS2t}) into equation (\ref{eq:line2}) and given that $Y_1(t)=\mu S^2(t)$, i find
+\begin{align*}
+d Y_1(t) &= (2\mu S(t))\,(\mu S(t) + \sigma S(t)dW(t))+ \sigma^2 \mu S^2(t) dt \\
+         &= (2\mu+\sigma^2) \mu S^2(t)dt + 2\mu S^2(t) dW(t) \\
+         &= (2\mu+\sigma^2) Y_1(t)\,dt + 2Y_1(t) \,dW(t)
+\end{align*}
+
+Thus, I can conclude $Y_1(t)$ is a GBM with parameters $\tilde{\mu}= (2\mu+\sigma^2)$ and $\tilde{\sigma} = 2$.
+
+\subsection{}
+
+Using Ito's formula with $g(t,W(t)) := e^{W(t)}$, I have
+
+\begin{align}
+dg(t,W(t)) &= \frac{\partial g}{\partial t} dt +
+              \frac{\partial g}{\partial W(t)} dW(t) +
+              \frac{1}{2} \frac{\partial^2g}{\partial W^2(t)} (dW(t))^2 \label{eq:itoformula2}
+\end{align}
+
+Calculating the derivatives and using the definition of $Y_2(t)$, it follows that
+
+\begin{align*}
+dY_2(t) &= 0\,dt + e^{W(t)}\,dW(t) + \frac{1}{2}e^{W(t)}\,(dW(t))^2 \\
+        &= \frac{1}{2}e^{W(t)}\,dt +  e^{W(t)}\,dW(t) \\
+        &= \frac{1}{2}Y_2(t)\,dt + Y_2(t)\,dW(t)
+\end{align*}
+
+The stochastic process $Y_2(t)$ is a GBM with parameters $\mu=\frac{1}{2}$ and $\sigma=1$, thus it is not a martingale because the drift term $\mu$ is not zero.
+
+% insert here the demonstration

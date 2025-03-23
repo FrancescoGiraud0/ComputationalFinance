@@ -1,0 +1,36 @@
+\section{Exercise 1}
+
+\subsection{}
+
+I want to show theoretically that
+\begin{equation}
+    \int_0^t W(s)ds = \int_0^t (t-s)dW(s)
+\end{equation} \\
+
+Considering the function $g(s,X(s)) = (t-s)X(s)$ where $X(s):=W(s)$ and applying Ito's lemma
+\begin{equation*}
+d\,g(s,X(s)) = \frac{\partial g}{\partial g} ds +
+               \frac{\partial g}{\partial X(s)} dX(s)
+            = X(t)\,dt + t\,dX(t)
+\end{equation*}
+
+Integrating both sides and substituting $g(s,X(s))=(t-s)X(s)$ and $X(s)=W(s)$ I obtain
+
+\begin{align*}
+    \int_0^t{d\left[(t-s)W(s)\right]} &=  -\int_0^t{W(s)\,ds} \;+ \int_0^t{(t-s)\,dW(s)} \\
+    (t-s)W(t) \left|^t_0 \right. &= -\int_0^t{W(s)\,ds} \;+ \int_0^t{(t-s)\,dW(s)} \\
+    (t-t)W(t) - (t-0)W(0) &= -\int_0^t{W(s)\,ds} \;+ \int_0^t{(t-s)\,dW(s)} \\ 
+    -tW(0) &= -\int_0^t{W(s)\,ds} \;+ \int_0^t{(t-s)\,dW(s)}
+\end{align*}
+
+Since $W(t)$ is a Wiener process, by definition $W(0)=0$ w.p. $1$, so I can conclude that
+
+\begin{align*}
+    -\int_0^t{W(s)\,ds} \;&+ \int_0^t{(t-s)\,dW(s)} = 0 \\ 
+    \int_0^t{W(s)\,ds} &= \int_0^t{(t-s)\,dW(s)} \qquad \qquad \square
+\end{align*}
+
+\subsection{}
+
+
+

@@ -1,4 +1,3 @@
-#%%
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
@@ -54,7 +53,7 @@ S0 = 100.0      # Initial stock price
 K  = 95.0       # Strike price
 r = 0.03        # Risk-free rate
 sigma = 0.10    # Volatility
-T = 1           # Time to maturity (in years)
+T = 1           # Time to maturity
 
 # Calculate analytical price
 bs_price = bs_call_price(S0, K, r, sigma, T)
@@ -62,7 +61,7 @@ print(f"Black-Scholes analytical price: {bs_price:.6f}")
 
 # Test convergence with increasing number of paths
 path_counts = [int(i) for i in np.logspace(-1, 4, num=40) if int(i)>1]
-num_steps = 365
+num_steps = 365 # Number of days in a year (daily values)
 
 # Set a fixed seed to ensure reproducibility
 np.random.seed(42)
@@ -75,9 +74,10 @@ nonstd_errors = []
 abs_errors_std = []
 abs_errors_nonstd = []
 
+np.random.seed(1929)
+
 for paths in path_counts:
     # Run simulation with both methods at once
-    np.random.seed(42)  # Reset seed for reproducibility
     price_std, error_std, price_nonstd, error_nonstd = mc_call_price_comparison(
         S0, K, r, sigma, T, paths, num_steps
     )
@@ -104,8 +104,8 @@ plt.legend()
 plt.show()
 
 plt.figure(figsize=(8, 6))
-plt.loglog(path_counts, abs_errors_std, 'o-', label='With Standardization')
-plt.loglog(path_counts, abs_errors_nonstd, 's-', label='Without Standardization')
+plt.semilogx(path_counts, abs_errors_std, 'o-', label='With Standardization')
+plt.semilogx(path_counts, abs_errors_nonstd, 's-', label='Without Standardization')
 plt.xlabel('Number of Paths')
 plt.ylabel('Absolute Error')
 plt.title('Absolute Error vs. Black-Scholes Price')
@@ -113,7 +113,6 @@ plt.grid(True)
 plt.legend()
 plt.show()
 
-#%%
 # Additional analysis: Test stability with different random seeds
 num_seeds = 1000
 fixed_paths = 100
@@ -123,8 +122,7 @@ nonstd_results = []
 
 np.random.seed(2008)
 
-for seed in np.random.randint(0, 2**32, size=num_seeds):
-    np.random.seed(seed)
+for _ in np.random.randint(0, 2**32, size=num_seeds):
     price_std, _, price_nonstd, _ = mc_call_price_comparison(S0, K, r, sigma, T, fixed_paths, num_steps)
     std_results.append(price_std)
     nonstd_results.append(price_nonstd)
@@ -136,20 +134,18 @@ print("Black-Scholes price:     {:.6f}".format(bs_price))
 print("Mean absolute error (Standardized):     {:.6f}".format(np.mean(np.abs(np.array(std_results) - bs_price))))
 print("Mean absolute error (Non-Standardized): {:.6f}".format(np.mean(np.abs(np.array(nonstd_results) - bs_price))))
 
-
-#%%
 # Compute common min and max
 min_value = min(min(std_results), min(nonstd_results))
 max_value = max(max(std_results), max(nonstd_results))
 
 # Define common bins
-num_bins = 100  # Number of bins (you can adjust this)
-bins = np.linspace(min_value, max_value, num_bins + 1)  # Ensure same bin edges
+num_bins = 100
+bins = np.linspace(min_value, max_value, num_bins + 1)
 
 # Create subplots (2 rows, 1 column)
-fig, axes = plt.subplots(2, 1, figsize=(10, 10), sharex=True)
+fig, axes = plt.subplots(2, 1, figsize=(8, 6), sharex=True)
 
-# Histogram for Standardized Results (Top)
+# Histogram for Standardized Results
 axes[0].hist(std_results, bins=bins, alpha=0.5, color='blue', label='With Standardization', edgecolor='black')
 axes[0].axvline(x=bs_price, color='r', linestyle='-', label='Black-Scholes Price')
 axes[0].set_ylabel('Frequency')
@@ -157,8 +153,8 @@ axes[0].set_title('With Standardization')
 axes[0].legend()
 axes[0].grid(True)
 
-# Histogram for Non-Standardized Results (Bottom)
-axes[1].hist(nonstd_results, bins=bins, alpha=0.5, color='green', label='Without Standardization', edgecolor='black')
+# Histogram for Non-Standardized Results
+axes[1].hist(nonstd_results, bins=bins, alpha=0.5, color='orange', label='Without Standardization', edgecolor='black')
 axes[1].axvline(x=bs_price, color='r', linestyle='-', label='Black-Scholes Price')
 axes[1].set_xlabel('Option Price')
 axes[1].set_ylabel('Frequency')
@@ -166,7 +162,4 @@ axes[1].set_title('Without Standardization')
 axes[1].legend()
 axes[1].grid(True)
 
-# Adjust layout and save
-plt.tight_layout()
-plt.savefig('option_pricing_stability.png')
 plt.show()

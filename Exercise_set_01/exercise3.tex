@@ -1,1 +1,69 @@
 \section{Exercise 3}
+
+
+The impact of standardizing random samples in Monte Carlo simulations for option pricing under the Black-Scholes model is analyzed. The standardization procedure ensures that the random samples from a normal distribution maintain a mean of 0 and a variance of 1, aligning with the theoretical assumptions of the Black-Scholes model.
+
+The Black-Scholes model assumes that stock prices follow a geometric Brownian motion, requiring normally distributed random variables with specific statistical properties. In the simulation, stock price paths are generated according to
+\begin{equation}
+    S_{t+\Delta t} = S_t \exp\left((r - \frac{1}{2}\sigma^2)\Delta t + \sigma\sqrt{\Delta t}Z\right),
+\end{equation}
+where $Z \sim N(0,1)$ represents standard normal random variables. In practice, computer-generated random numbers may not perfectly maintain these statistical properties, particularly with smaller sample sizes.
+
+A Monte Carlo simulation was implemented to price a European call option using the following parameters:
+
+\begin{center}
+    \begin{tabular}{l c c}
+        \toprule
+        Parameter & Symbol & Value \\
+        \midrule
+        Initial Stock Price & $S_0$ & 100.0 \\
+        Strike Price & $K$ & 95.0 \\
+        Risk-free Rate & $r$ & 0.03 \\
+        Volatility & $\sigma$ & 0.10 \\
+        Time to Maturity & $T$ & 1.0 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+The analytical solution using the Black-Scholes formula yields a price of 8.934954. Two versions of the Monte Carlo simulation were compared: one using standardized random samples to ensure a mean of 0 and standard deviation of 1, and another using raw random samples directly. The convergence was tested by varying the number of simulation paths from 2 to 10,000. Additionally, stability analysis was performed using 1,000 different random seeds with a fixed path count of 100.
+
+The results demonstrate a clear advantage of standardizing random samples in Monte Carlo simulations for option pricing. The summary statistics from 1,000 random seeds are shown below:
+
+\begin{center}
+    \begin{tabular}{l c c c}
+        \toprule
+        Method & Mean Price & Standard Deviation & Mean Absolute Error \\
+        \midrule
+        With Standardization & 8.933259 & 0.260974 & 0.208185 \\
+        Without Standardization & 8.951233 & 0.845786 & 0.686860 \\
+        Black-Scholes (Analytical) & 8.934954 & - & - \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+The convergence of option prices toward the analytical Black-Scholes solution as the number of simulation paths increases is illustrated in Figure 1. The standardized method demonstrates significantly more stable behavior, particularly with fewer paths. The non-standardized approach exhibits extreme volatility at lower path counts, with price estimates varying dramatically.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{Image_3.png}\\
+    Figure 1: Convergence of Option Prices
+\end{center}
+
+The absolute error against the analytical Black-Scholes price is illustrated in Figure 2. The standardized method consistently produces lower errors across different path counts. Notably, the non-standardized approach shows substantially higher errors, especially with fewer than 100 paths.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{Image_2.png}\\
+    Figure 2: Absolute Error vs. Black-Scholes Price
+\end{center}
+
+The distribution of option prices from simulations with 1,000 different random seeds is presented in Figure 3. The standardized method produces a tighter, more normally distributed set of prices centered closely around the analytical Black-Scholes price. The non-standardized method yields a wider, more irregular distribution with greater variance.
+
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{Image_4.png}\\
+    Figure 3: Option Price Distributions
+\end{center}
+
+The superior performance of the standardized approach can be attributed to several factors. Standardization ensures that the random samples strictly adhere to the $N(0,1)$ distribution required by the theoretical model, eliminating any drift in mean or variance that might occur in computer-generated pseudo-random numbers. Furthermore, the standardization process effectively acts as a variance reduction technique, leading to more consistent results with fewer simulation paths. This is evident in the significantly lower standard deviation of the standardized method (0.260974) compared to the non-standardized approach (0.845786). 
+
+The standardized method requires fewer paths to achieve accuracy comparable to the analytical solution. This is particularly important in computational finance, where simulation efficiency directly impacts computational costs. The tighter distribution of the standardized results demonstrates higher reliability and reproducibility across different random seeds, which is crucial for financial risk management and decision-making.
+
+Standardizing random samples in Monte Carlo simulations for option pricing under the Black-Scholes model provides significant benefits in terms of accuracy, efficiency, and reliability. The standardized approach converges faster to the analytical solution, exhibits lower variability across different random seeds, and produces consistently lower errors compared to the non-standardized method. These advantages become increasingly important in more complex pricing scenarios where analytical solutions may not be available, and simulation efficiency is paramount. The results conclusively demonstrate that enforcing the theoretical properties of the random variables through standardization is not merely a theoretical nicety but has practical implications for the quality and reliability of option pricing models.

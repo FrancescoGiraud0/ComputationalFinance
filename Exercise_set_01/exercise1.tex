@@ -32,5 +32,37 @@ Since $W(t)$ is a Wiener process, by definition $W(0)=0$ w.p. $1$, so I can conc
 
 \subsection{}
 
+This section presents the numerical validation of the theoretical equality $\int_0^t W(s)ds = \int_0^t (t-s)dW(s)$ with $t=5$.
 
+The time interval $[0,5]$ was discretized into $n$ equal subintervals of length $\Delta t = \frac{5}{n}$ with time points $t_i = i\Delta t$ for $i = 0,1,2,...,n$. The left-hand side integral was approximated using a left-point Riemann sum: $\int_0^5 W(s)ds \approx \sum_{i=0}^{n-1} W(t_i) \Delta t$. The right-hand side stochastic integral was approximated using the Itô discretization: $\int_0^5 (5-s)dW(s) \approx \sum_{i=0}^{n-1} (5-t_i)[W(t_{i+1})-W(t_i)]$.
+
+The numerical implementation calculated these approximations recursively:
+\begin{align}
+I1(t_{i+1}) &= I1(t_i) + W(t_i)\Delta t\\
+I2(t_{i+1}) &= I2(t_i) + (5-t_i)[W(t_{i+1})-W(t_i)]
+\end{align}
+
+\begin{figure}[H]
+\centering
+% Insert first figure here
+\includegraphics[width=0.8\textwidth]{brownian_paths_figure.png}
+\caption{Sample path of Brownian motion and the two integral processes showing their equality}
+\label{fig:paths}
+\end{figure}
+
+Figure \ref{fig:paths} displays one realization of a Brownian motion path along with both integral processes. Visual inspection confirms the integrals track each other closely throughout the time period, providing initial evidence of their equality.
+
+For rigorous validation, 1,000 independent paths were simulated using step sizes ranging from $2^1$ to $2^{15}$. The absolute difference between terminal values was calculated: $\text{Error} = \left|\int_0^5 W(s)ds - \int_0^5 (5-s)dW(s)\right|$.
+
+\begin{figure}[H]
+\centering
+% Insert second figure here
+\includegraphics[width=0.8\textwidth]{convergence_figure.png}
+\caption{Mean absolute error convergence with 95\% confidence intervals}
+\label{fig:convergence}
+\end{figure}
+
+Figure \ref{fig:convergence} shows the mean absolute error decreasing as the number of steps increases, following approximately an $O(1/n)$ convergence rate. The 95\% confidence intervals (calculated as $\text{Mean Error} \pm 1.96 \times \frac{\text{Standard Deviation}}{\sqrt{1000}}$) narrow with increasing step count, indicating reduced variability in the approximation error.
+
+The numerical experiment strongly validates the theoretical equality. The mean absolute error approaches zero as discretization becomes finer, reaching approximately $1.5 \times 10^{-4}$ at $2^{15}$ steps. This convergence behavior provides compelling evidence for the theoretical result established in part (a). The small remaining error is attributable to the inherent limitations of numerical discretization and would continue to decrease with finer discretization.
 

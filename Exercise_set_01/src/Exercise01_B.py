@@ -60,8 +60,8 @@ int_t_s_dWs = W_t["I2"]
 
 plt.figure(figsize=(8, 6))
 plt.plot(timeGrid, np.transpose(Ws), label='BM')
-plt.plot(timeGrid, np.transpose(intWsds), 'r', label='Integral 1')
-plt.plot(timeGrid, np.transpose(int_t_s_dWs), 'k', label='Integral 2')
+plt.plot(timeGrid, np.transpose(intWsds), 'r', label=r'$\int_0^5{W(s)\,ds}$')
+plt.plot(timeGrid, np.transpose(int_t_s_dWs), 'k', label=r'$\int_0^5{(5-s)\,dW(s)}$')
 plt.grid()
 plt.xlabel("time")
 plt.ylabel("value")

@@ -78,6 +78,30 @@ In particular for $T = 10$, this simplifies to
 \text{Var}(X(t)) = 
 \begin{cases}
 t - \frac{t^2}{5} + \frac{t^2(10-t)}{100}, & \text{if } t \leq 5, \\
-t - \frac{t(10-t)}{5} + \frac{t^2(10-t)}{100}, & \text{if } t > 5.
+t - \frac{t(10-t)}{5} + \frac{t^2(10-t)}{100}, & \text{if } t > 5. \label{eq:var_t}
 \end{cases}
 \end{equation}
+
+\subsection{Numerical Simulation}
+
+ For numerical confirmation, I simulated 100000 paths of $X(t)$ and estimated the variance in 1000 time steps over the time interval $[0,T]$ with $T = 10$. The Wiener process $W(t)$ was approximated by generating random increments, which were then accumulated to produce a discretized representation of the continuous process. This discretized process was used to compute the values of $X(t)$ at each time step.
+
+To estimate the variance of $X(t)$, the sample variance was calculated across all simulated paths at each time step. Then, this numerical estimate was compared with the analytical expression (\ref{eq:var_t}) derived before.
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{0.5\textwidth}
+    \centering
+    \includegraphics[width=1\textwidth]{Exercise_set_01/img/AnalyticalVsSimulated.png}
+    \caption{Analytical vs Simulated Variance of \(X(t)\)}
+    \label{fig:var}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+    \centering
+    \includegraphics[width=1\textwidth]{Exercise_set_01/img/AnalyticalVsSimulated_abs.png}
+    \caption{Absolute Difference Between Analytical and Simulated Variance of \(X(t)\)}
+    \label{fig:diff}
+\end{minipage}
+\end{figure}
+
+The results show agreement between the simulated and analytical variances, as shown in Figure \ref{fig:var}. However, in Figure \ref{fig:diff} it is possible to see accuracy differences between $t\leq5$ and $t\leq10$. In fact, for $t \leq 5$, the difference remains consistently low and stable, indicating a high level of precision in this region. Instead, for $t \geq 5$, the error begins to increase slightly, with a more noticeable rise as $t$ approaches $T=10$. In conclusion, it seems that the accuracy is sensitive to $t$.

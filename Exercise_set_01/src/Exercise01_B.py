@@ -1,8 +1,8 @@
-#%%
 """
+Python version 3.12.6
 Computational Finance - Exercise Set 1
 Exercise 1.B, Numerical Validation
-@author: Francesco Giraudo
+@author: Francesco Giraudo - VU Amsterdam
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -49,7 +49,8 @@ NoOfSteps = 100
 T = 5
 
 # Random seed for reproducibility
-np.random.seed(20080915)
+np.random.seed(1929)
+
 W_t = ComputeIntegrals(NoOfPaths,NoOfSteps,T)
 
 timeGrid = W_t["time"]
@@ -57,61 +58,61 @@ Ws = W_t["W"]
 intWsds = W_t["I1"]
 int_t_s_dWs = W_t["I2"]
 
-plt.figure(1)
-plt.plot(timeGrid, np.transpose(Ws))
-plt.plot(timeGrid, np.transpose(intWsds),'r')
-plt.plot(timeGrid, np.transpose(int_t_s_dWs),'k')
+plt.figure(figsize=(8, 6))
+plt.plot(timeGrid, np.transpose(Ws), label='BM')
+plt.plot(timeGrid, np.transpose(intWsds), 'r', label='Integral 1')
+plt.plot(timeGrid, np.transpose(int_t_s_dWs), 'k', label='Integral 2')
 plt.grid()
 plt.xlabel("time")
 plt.ylabel("value")
 plt.title("Integrated Brownian Motion paths")
+plt.legend(loc='lower right')
+plt.show()
 
-# %%
-NoOfPaths = 10000
-NoOfSteps = 1000
-T = 5
+# 2. Simulating the previous step for 1000 random paths and computing the mean
+#    absolute error convergence and 95% confidence intervals for different 
+#    number of steps
 
-np.random.seed(16370201)
-W_t = ComputeIntegrals(NoOfPaths,NoOfSteps,T)
-
-timeGrid = W_t["time"]
-Ws = W_t["W"]
-intWsds = W_t["I1"]
-int_t_s_dWs = W_t["I2"]
-
-# Computing the mean absolute error
-diff = intWsds[:,-1]-int_t_s_dWs[:,-1]
-abs_diff = np.abs(diff)
-
-print(f"Mean absolute error: {np.mean(abs_diff):1e}")
-print(f"Max abolute error: {np.max(abs_diff):1e}\n")
-print(f"{"-"*20}\n")
-print(f"Mean error: {np.mean(diff):.1e}")
-print(f"Error std. deviation:  {np.std(abs_diff):1e}")
-
-ci = np.mean(diff) + np.array([-1.96, 1.96]) * (np.std(diff, ddof=1) / np.sqrt(len(diff)))
-print(f"95% Confidence Interval: {ci}")
-
-
-#%%
-NoOfPaths = 10000
+NoOfPaths = 1000
 NoOfSteps = [(2**i) for i in range(1,16)]
 T = 5
-
 mean_abs_error = np.zeros(len(NoOfSteps))
+std_error = np.zeros(len(NoOfSteps))
 
-np.random.seed(16370201)
+# Random seed for reproducibility
+np.random.seed(2008)
+
+# For every step size in NoOfSteps, simulate and compute mean absolute error
 for i in range(len(NoOfSteps)):
-    i
     W_t = ComputeIntegrals(NoOfPaths, NoOfSteps[i], T)
-    abs_diff = np.abs(W_t["I1"][:,-1] - W_t["I2"][:,-1])
+    diff = W_t["I1"][:,-1] - W_t["I2"][:,-1]
+    abs_diff = np.abs(diff)
     mean_abs_error[i] = np.mean(abs_diff)
+    # Calculate standard error for confidence interval
+    std_error[i] = np.std(abs_diff, ddof=1) / np.sqrt(NoOfPaths)
 
-plt.figure()
-plt.plot(NoOfSteps, mean_abs_error)
-plt.grid()
+# Create confidence intervals (95%)
+upper_bound = mean_abs_error + 1.96 * std_error
+lower_bound = mean_abs_error - 1.96 * std_error
+
+plt.figure(figsize=(8, 6))
+# Plot mean absolute error with a label for the legend
+plt.plot(NoOfSteps, mean_abs_error, 'b-', linewidth=1, 
+         label='Mean Absolute Error')
+# Add confidence interval as a shaded area
+plt.fill_between(NoOfSteps, lower_bound, upper_bound, color='r', 
+                 alpha=0.5, label='95% Confidence Interval')
+
+# Logarithmic scales for both axes for better visualization
+plt.xscale("log")
 plt.yscale("log")
-plt.xlabel("Number of steps")
-plt.ylabel("Value")
-plt.title("Absolute error convergence to 0")
-# %%
+# Add grid, labels, and title
+plt.grid(True, which="both", ls="-", alpha=0.2)
+plt.xlabel("Number of Steps (log scale)")
+plt.ylabel("Mean Absolute Error (log scale)")
+plt.title("Convergence of Mean Absolute Error with Confidence Intervals")
+# Add legend
+plt.legend(loc='best')
+# Tight layout for better spacing
+plt.tight_layout()
+plt.show()

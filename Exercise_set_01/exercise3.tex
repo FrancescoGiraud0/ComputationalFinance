@@ -63,10 +63,10 @@ In contrast, the non-standardized approach shows significant fluctuations at low
 \centering
 \includegraphics[width=0.5\textwidth]{Exercise_set_01/img/DistStdVsNon.png} \
 \caption{Standardization vs without standardization option price estimation}
-\label{fig}
+\label{fig:distStdVsNon}
 \end{figure}
 
-The distribution of option prices from simulations with 1000 different random seeds is presented in Figure 3. The standardized method produces a tighter, more normally distributed set of prices centered closely around the analytical Black-Scholes price. The non-standardized method yields a wider, more irregular distribution with greater variance.
+The distribution of option prices from simulations with 1000 different random seeds is presented in Figure (\ref{fig:distStdVsNon}). The standardized method produces a tighter, more normally distributed set of prices centered closely around the analytical Black-Scholes price. The non-standardized method yields a wider, more irregular distribution with greater variance.
 
 The summary statistics from 1,000 random seeds reveal quantitative evidence of standardization's impact. One observes that with standardization, the mean price of 8.933259 closely approximates the analytical Black-Scholes price of 8.934954, with a standard deviation of merely 0.260974. In contrast, the non-standardized approach yields a mean price of 8.951233 with a substantially higher standard deviation of 0.845786. The mean absolute error confirms this superior performance, with the standardized method achieving 0.208185 compared to 0.686860 for the non-standardized approach.
 \begin{center}

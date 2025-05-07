@@ -32,7 +32,7 @@ r = 0.05
 M0 = 1
 
 # Plot graph of sigma_star for different values of T
-T = np.linspace(1e-4, 3, int(3e4))
+T = np.linspace(1e-4, 6, int(6e4))
 # Apply the sigma_star function to each element of the grid T
 sigma_star_T = np.vectorize(sigma_star)(T)
 #plot the graph
@@ -46,14 +46,14 @@ plt.show()
 # Compute the value the price of call option at different maturities for different strikes
 T = np.linspace(0.01, 3, 100)
 K = np.linspace(0.01, 3, 100)
-T, K = np.meshgrid(T, K)
+K, T = np.meshgrid(K, T)
 # Apply the Vc (BS price function) to each element of the grid T and K
-V = np.vectorize(lambda tau,k: Vc(OptionType.CALL, S0, k, sigma_star(tau), tau, r))(T,K)
+V = np.vectorize(lambda k,tau: Vc(OptionType.CALL, S0, k, sigma_star(tau), tau, r))(K,T)
 
-fig = plt.figure()
+fig = plt.figure(figsize=(5, 5))
 ax = fig.add_subplot(111, projection='3d')
 ax.plot_surface(K, T, V, cmap='viridis')
-ax.view_init(elev=15, azim=-55)
+ax.view_init(elev=15, azim=-50)
 ax.set_xlabel('Strike Price (K)', labelpad=5)
 ax.set_ylabel('Maturity (T)', labelpad=5)
 ax.set_zlabel(r'Call Option Price ($V_C$)', labelpad=3)

@@ -123,6 +123,7 @@ ax.set_zlabel('Implied Volatility')
 plt.tight_layout()
 plt.show()
 
+
 iv_mod = np.clip(IV_surface, 0.3, 0.6)
 
 #%%
@@ -130,7 +131,8 @@ iv_mod = np.clip(IV_surface, 0.3, 0.6)
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.plot_surface(K_mesh, T_mesh, iv_mod, cmap='viridis')
-ax.view_init(elev=15, azim=55)
+ax.view_init(elev=15, azim=-55)
+ax.set_zlim(0.0, 1)
 ax.set_title('Clipped Implied Volatility Surface (GBM with Time-Dependent Volatility)')
 ax.set_xlabel('Strike Price (K)')
 ax.set_ylabel('Maturity (T)')

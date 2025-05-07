@@ -1,3 +1,9 @@
+"""
+Python version 3.12.6
+Computational Finance - Exercise Set 2
+Exercise 1.B, Price of Call Option and Implied Volatility
+@author: Francesco Giraudo - VU Amsterdam
+"""
 import numpy as np
 import enum
 import scipy.stats as st
@@ -8,7 +14,6 @@ class OptionType(enum.Enum):
     CALL = 1.0
     PUT = -1.0
 
-# Monte-Carlo simulation for the call option value
 def simulate_asset_paths(S0, r, T, num_paths, num_steps):
     sigma = lambda t: 0.6 - 0.2 * np.exp(-1.5 * t)
 
@@ -26,8 +31,9 @@ def simulate_asset_paths(S0, r, T, num_paths, num_steps):
 
     # Simulate stock price paths
     for i in range(num_steps):
-        current_sigma = sigma(times[i])
-        S[:, i + 1] = S[:, i] * np.exp((r - 0.5 * current_sigma**2) * dt + current_sigma * dW[:, i])
+        sig = sigma(times[i])
+        S[:, i + 1] = S[:, i] + r * S[:, i] * dt + sig * S[:, i] * dW[:, i] + \
+                          0.5 * sig * S[:, i] * (dW[:, i]**2 - dt) * sig
     
     return S  # Return the entire matrix of paths
 
@@ -62,7 +68,7 @@ def ImpliedVolatility(CP, Vmkt, S0, K, T, r):
 # Parameters
 S0 = 1.0
 r = 0.05
-num_steps = 500
+num_steps = 400
 num_paths = int(1e6)
 strikes = np.linspace(0.1, 5.0, 20).round(1)
 maturities = np.linspace(0.1, 5.0, 10).round(1)

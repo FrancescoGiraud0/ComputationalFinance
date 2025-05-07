@@ -50,3 +50,52 @@ with $\Phi(x)$ representing the cumulative distribution function (CDF) of the st
 In Figure \ref{fig:vc} a plot of the values of the call option for different strikes and maturities.
 
 \subsection{}
+To analyze the implied volatility I performed a numerical experiment  focused on the evolution of implied volatility across different strikes and maturities.
+
+Firstly, I simulated the asset price paths using the Milstein discretization scheme, which for the stochastic differential equation
+\begin{equation*}
+dS_t = r S_t dt + \sigma(t) S_t dW_t^{\mathbb{Q}},
+\end{equation*}
+takes the form
+\begin{equation*}
+S_{t_{i+1}} = S_{t_i} + r S_{t_i} \Delta t + \sigma(t_i) S_{t_i} \Delta W_i + \frac{1}{2} \sigma(t_i) \sigma'(t_i) S_{t_i} \left( (\Delta W_i)^2 - \Delta t \right),
+\end{equation*}
+where $\Delta W_i \sim \mathcal{N}(0, \Delta t)$ and $\sigma'(t) = 0.3 e^{-1.5t}$.
+
+For each pair of strike $K$ and maturity $T$, the value of the European call option was approximated by the Feynman-Kac formula using the Monte Carlo estimator
+\begin{equation*}
+V_C(0, S_0, K, T) \approx e^{-rT} \frac{1}{N} \sum_{j=1}^N \max(S_T^{(j)} - K, 0),
+\end{equation*}
+where $S_T^{(j)}$ is the terminal value of the $j$-th simulated path.
+
+The strikes and maturities considered in the simulation were uniformly sampled as
+\begin{equation*}
+K \in \{0.1, 0.35, \ldots, 5.0\}, \quad T \in \{0.1, 0.66, \ldots, 5.0\},
+\end{equation*}
+using 20 strikes and 10 maturities, respectively.
+
+To determine the implied volatility corresponding to each computed option price, a calibration procedure was implemented using Newton's method to invert the Black-Scholes formula. The implied volatility was obtained as the root $\hat{\sigma}$ satisfying
+\begin{equation*}
+BS(S_0, K, r, T, \hat{\sigma}) = V_C,
+\end{equation*}
+where $BS(\cdot)$ denotes the Black-Scholes call price.
+
+\begin{figure}[h!]
+    \begin{minipage}{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{Exercise_set_02/img/01B_volat_th.png}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.49\linewidth}
+    \includegraphics[width=\linewidth]{Exercise_set_02/img/01B_implied.png}
+    \label{fig:imp_vs_th}
+    \end{minipage}
+        \caption{Left: Theoretical equivalent constant volatility $\sigma_*(T)$ computed analytically for each maturity. Right: Implied volatility surface obtained from Monte Carlo simulation and calibration for varying strikes and maturities.}
+\end{figure}
+
+When comparing the implied volatility surface obtained from numerical calibration with the analytical equivalent constant volatility $\sigma_*(T)$ derived in part (a), it is observed that the calibrated implied volatilities match closely for moderate and long maturities, as well as for strikes near the money. However, noticeable discrepancies arise for very low strikes and short maturities.
+
+These deviations are primarily due to the sparsity and variability of the payoff distribution in those regions. For short maturities and low strikes, many simulated asset paths do not reach the payoff region $(S_T > K)$, resulting in a high frequency of zero payoffs. Consequently, the estimated option prices become unstable and exhibit high variance, especially when the option is deeply out of the money or close to expiry. This leads to unreliable calibration results, as the implied volatility inversion is highly sensitive to noise in option values near zero.
+
+Moreover, the Newton-based calibration procedure may fail to converge or converge inaccurately when the input price is near the lower bound of admissible Black-Scholes prices. As a result, the implied volatility surface exhibits irregularities in those regions, which do not reflect the true behavior of the model but rather the limitations of the numerical procedure and simulation granularity.
+

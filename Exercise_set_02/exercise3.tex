@@ -1,0 +1,58 @@
+\section{Exercise 3}
+
+
+In this experiment, the price of a European call option was computed under a geometric Brownian motion (GBM) with time-dependent volatility
+\[
+\sigma(t) = 0.6 - 0.2e^{-1.5t}
+\]
+and a piecewise constant interest rate given by
+\[
+r(t) = 0.05 \cdot \mathbf{1}_{\{t < 2\}} + 0.08 \cdot \mathbf{1}_{\{t \geq 2\}}.
+\]
+
+
+The Euler scheme used the discretization:
+\[
+S_{t+\Delta t} = S_t + r(t) S_t \Delta t + \sigma(t) S_t (W_{t+\Delta t} - W_t)
+\]
+and the Milstein scheme applied:
+\[
+S_{t+\Delta t} = S_t + r(t) S_t \Delta t + \sigma(t) S_t (W_{t+\Delta t} - W_t) + \frac{1}{2} \sigma^2(t) S_t \left((W_{t+\Delta t} - W_t)^2 - \Delta t\right).
+\]
+
+\begin{table}[h!]
+\centering
+\label{tab:euler}
+\begin{tabular}{|c|cccc|}
+\hline
+\textbf{Paths} & \textbf{m=50} & \textbf{m=100} & \textbf{m=200} & \textbf{m=400} \\
+\hline
+1000    & 0.49809 & 0.46843 & 0.38633 & 0.37968 \\
+10000   & 0.38844 & 0.40604 & 0.36678 & 0.35852 \\
+100000  & 0.36848 & 0.36646 & 0.36517 & 0.36358 \\
+\hline
+\end{tabular}
+\caption{Euler scheme: option prices for different \(N\) and \(m\)}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\label{tab:milstein}
+\begin{tabular}{|c|cccc|}
+\hline
+\textbf{Paths} & \textbf{m=50} & \textbf{m=100} & \textbf{m=200} & \textbf{m=400} \\
+\hline
+1000    & 0.49545 & 0.46906 & 0.38049 & 0.37958 \\
+10000   & 0.38021 & 0.40226 & 0.36407 & 0.35829 \\
+100000  & 0.36434 & 0.36393 & 0.36382 & 0.36278 \\
+\hline
+\end{tabular}
+\caption{Milstein scheme: option prices for different \(N\) and \(m\)}
+\end{table}
+
+The results in Tables~\ref{tab:euler} and~\ref{tab:milstein} demonstrate consistent convergence of the estimated European call option prices as both \(N\) and \(m\) increase. The Milstein method shows a marginal advantage in terms of stability and reduced numerical error, consistent with its inclusion of higher-order terms in the stochastic Taylor expansion.
+
+\bigskip
+
+Additionally, barrier options were computed using the same framework with barrier level \(B = 1.5\) and strike \(K = 1.6\), as requested. Given the initial asset price \(S_0 = 1\), which is below the barrier, the up-and-out option is deactivated immediately and consistently returns a value of zero. On the other hand, the up-and-in option yields results identical to the European option. This is because \(S_0 = 1 < B = 1.5 < K = 1.6\), so the only paths contributing to a non-zero payoff are those where the final price exceeds the strike, which necessarily implies that the barrier has been crossed.
+

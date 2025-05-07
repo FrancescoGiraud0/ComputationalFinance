@@ -1,11 +1,6 @@
 \section{Exercise 2}
 
 \subsection{}
-Consider the stochastic differential equation:
-\begin{equation*}
-    dS(t) = \gamma \sqrt{S(t)} \, dW(t), \quad S(0) = s_0 > 0.
-\end{equation*}
-
 Let $X(t) = g(t, S(t)) := \frac{2}{\gamma} \sqrt{S(t)}$. Applying Itô's formula for a function $g(t, S)$, with $S(t)$ governed by an SDE, gives:
 \begin{equation*}
     dg(t, S(t)) = \frac{\partial g}{\partial t} \, dt + \frac{\partial g}{\partial S} \, dS(t) + \frac{1}{2} \frac{\partial^2 g}{\partial S^2} \, (dS(t))^2.

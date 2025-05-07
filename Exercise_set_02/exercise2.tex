@@ -1,0 +1,49 @@
+\section{Exercise 2}
+
+\subsection{}
+Consider the stochastic differential equation:
+\begin{equation*}
+    dS(t) = \gamma \sqrt{S(t)} \, dW(t), \quad S(0) = s_0 > 0.
+\end{equation*}
+
+Let $X(t) = g(t, S(t)) := \frac{2}{\gamma} \sqrt{S(t)}$. Applying Itô's formula for a function $g(t, S)$, with $S(t)$ governed by an SDE, gives:
+\begin{equation*}
+    dg(t, S(t)) = \frac{\partial g}{\partial t} \, dt + \frac{\partial g}{\partial S} \, dS(t) + \frac{1}{2} \frac{\partial^2 g}{\partial S^2} \, (dS(t))^2.
+\end{equation*}
+
+For $g(t, S) = \frac{2}{\gamma} \sqrt{S}$, the partial derivatives are:
+\begin{equation*}
+    \frac{\partial g}{\partial t} = 0, \quad \frac{\partial g}{\partial S} = \frac{1}{\gamma \sqrt{S}}, \quad \frac{\partial^2 g}{\partial S^2} = -\frac{1}{2 \gamma S^{3/2}}.
+\end{equation*}
+
+Given $dS(t) = \gamma \sqrt{S(t)} \, dW(t)$ and $(dS(t))^2 = \gamma^2 S(t) \, dt$, substitution into Itô's formula yields:
+\begin{align*}
+    dX(t) &= \frac{1}{\gamma \sqrt{S(t)}} \cdot \gamma \sqrt{S(t)} \, dW(t)
+           + \frac{1}{2} \cdot \left(-\frac{1}{2 \gamma S(t)^{3/2}}\right) \cdot \gamma^2 S(t) \, dt \\
+          &= dW(t) - \frac{1}{2 X(t)} \, dt.
+\end{align*}
+
+The process $X(t)$ satisfies the stochastic differential equation:
+\begin{equation*}
+    dX(t) = dW(t) - \frac{1}{2 X(t)} \, dt,
+\end{equation*}
+which corresponds to a Bessel process of dimension $1$.
+
+Therefore, $X(t)^2$ is a squared Bessel process and since $S(t) = \left( \frac{\gamma}{2} X(t) \right)^2$, it follows that $S(T)$ is distributed as:
+\begin{equation*}
+    S(T) \sim \frac{\gamma^2}{4} \cdot \chi^2_1(\lambda), \quad \lambda = X(0)^2 = \left( \frac{2}{\gamma} \sqrt{s_0} \right)^2 = \frac{4 s_0}{\gamma^2}.
+\end{equation*}
+
+The characteristic function of a scaled noncentral chi-squared variable $Y = c \cdot \chi^2_\nu(\lambda)$ is:
+\begin{equation*}
+    \phi_Y(u) = (1 - 2iuc)^{-\nu/2} \exp\left( \frac{iuc\lambda}{1 - 2iuc} \right).
+\end{equation*}
+
+Here, $c = \frac{\gamma^2}{4}$, $\nu = 1$, and $\lambda = \frac{4 s_0}{\gamma^2}$, so the characteristic function of $S(T)$ becomes:
+\begin{align*}
+    \phi_{S(T)}(u)
+    &= \left(1 - 2i u \cdot \frac{\gamma^2}{4} \right)^{-1/2}
+    \exp\left( \frac{i u \cdot \frac{\gamma^2}{4} \cdot \frac{4 s_0}{\gamma^2}}{1 - 2i u \cdot \frac{\gamma^2}{4}} \right) \\
+    &= \left(1 - \frac{i u \gamma^2}{2} \right)^{-1/2}
+    \exp\left( \frac{i u s_0}{1 - \frac{i u \gamma^2}{2}} \right).
+\end{align*}

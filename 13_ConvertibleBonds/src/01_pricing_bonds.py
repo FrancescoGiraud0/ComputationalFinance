@@ -1,3 +1,10 @@
+"""
+Python version 3.12.8
+Computational Finance - Final Project
+Task 1
+@author: Francesco Giraudo - VU Amsterdam
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 

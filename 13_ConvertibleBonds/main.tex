@@ -1,0 +1,93 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author: [Francesco Giraudo]
+% Date: 2025-05-03
+% Description: [Exercise Set 2 - Computational Finance]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{amsfonts}
+\usepackage{amsmath} 
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{mdframed}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{float}
+
+\geometry{a4paper, margin=1in}
+
+% Set custom margins
+\geometry{
+  top=0.8in,
+  bottom=0.8in,
+  left=0.75in,
+  right=0.75in
+}
+
+% Eliminate paragraph indentation
+\setlength{\parindent}{0pt}
+
+\title{Computational Finance - Final project: Convertible Bonds}
+\author{Francesco Giraudo \\ \small{Vrije Universiteit} \\ {\small\texttt{f.giraudo@student.vu.nl}}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\bigskip
+
+\section*{Introduction}
+
+Convertible bonds are hybrid financial instruments that combine features of both debt and equity. They pay regular coupon payments and return the principal at maturity, similar to traditional bonds. However, they also grant the bondholder the option to convert the bond into a predetermined number of shares of the issuing company at specific times before maturity. The option to convert allows bondholders to participate in the equity upside while offering downside protection through the bond's principal and coupon payments. Convertible bonds are typically less volatile than stocks but offer higher returns than regular bonds.  \\
+
+In this report I will use the following notation:
+\begin{itemize}
+    \item $N$ : Face value of the bond,
+    \item $K$ : Annual coupon rate,
+    \item $T$ : Maturity time (years),
+    \item $\ell$ : Conversion ratio (number of shares per bond),
+    \item $r$ : Risk-free interest rate,
+    \item $\sigma$ : Volatility of the underlying stock,
+    \item $S(t)$ : Stock price at time $t$.
+\end{itemize}
+
+\bigskip
+
+\section{Backward Induction for Convertible Bond Pricing}
+
+\input{13_ConvertibleBonds/01_Dynamic_Programming_formulation}
+
+\section{Regression Monte Carlo for Convertible Bond Pricing}
+
+\input{13_ConvertibleBonds/02_Regression_Monte_Carlo}
+
+
+\section{Convertible Bonds with Arbitrary Conversion Dates}
+
+\input{13_ConvertibleBonds/03_Arbitrary_Conversion}
+
+
+\section{Analysis of Convertible Bond Pricing}
+
+\input{13_ConvertibleBonds/04_Analysis_Conclusions}
+
+\section{Conclusion}
+
+The pricing of convertible bonds depends heavily on the interplay between the bond’s fixed-income characteristics and the embedded option to convert into equity. Through the use of Regression Monte Carlo methods, the analysis reveals that convertible bond prices are highly sensitive to key market parameters, particularly stock price volatility and interest rates. Higher volatility increases the potential upside from conversion, thereby enhancing the bond’s value, while higher interest rates tend to reduce it by lowering the present value of future cash flows.\\
+
+The flexibility associated with the timing of conversion opportunities plays a critical role in the valuation of convertible bonds. Allowing continuous conversion, as approximated by American-style rights, maximizes bond value. However, even a moderate increase in the frequency of conversion opportunities, such as moving from semiannual to monthly windows, captures a significant portion of the flexibility premium.\\
+
+
+Overall, understanding the effect of conversion flexibility is crucial for both issuers, who aim to optimize financing costs and manage equity dilution, and investors, who seek to maximize the value derived from convertible bond investments. The analysis provides clear evidence that the design of conversion rights must be carefully considered in the structuring and evaluation of convertible bonds.
+
+\newpage
+
+\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+\end{document}

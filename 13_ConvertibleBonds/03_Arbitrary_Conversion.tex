@@ -1,0 +1,90 @@
+\subsection{Mathematical Formulation}
+
+In this section, I extend the analysis to allow for conversion at arbitrary dates, not necessarily coinciding with coupon payments. This generalization is important because real-world convertible bonds often have different conversion schedules.
+
+Let me denote the set of allowed conversion dates as $\mathcal{T}_c = \{t_1^c, t_2^c, \ldots, t_m^c\}$, which may differ from the set of coupon payment dates $\mathcal{T}_p = \{t_1^p, t_2^p, \ldots, t_n^p\}$. The valuation problem becomes more complex as I need to track both payment and conversion events separately.
+
+The dynamic programming recursion is modified as follows:
+
+\begin{itemize}
+    \item \textbf{At maturity} $T$:
+    \begin{equation}
+        V(T, S) = \max\left( N, \ell S \right)
+    \end{equation}
+    
+    \item \textbf{At dates that are both coupon payment and conversion dates} ($t \in \mathcal{T}_p \cap \mathcal{T}_c$):
+    \begin{equation}
+        V(t, S) = \max \left\{
+            e^{-r \Delta t} \mathbb{E} \left[ V(t', S') \mid S(t) = S \right] + c N \Delta t, \;
+            \ell S
+        \right\}
+    \end{equation}
+    where $t'$ is the next event date (either payment or conversion).
+    
+    \item \textbf{At conversion-only dates} ($t \in \mathcal{T}_c \setminus \mathcal{T}_p$):
+    \begin{equation}
+        V(t, S) = \max \left\{
+            e^{-r \Delta t} \mathbb{E} \left[ V(t', S') \mid S(t) = S \right], \;
+            \ell S
+        \right\}
+    \end{equation}
+    
+    \item \textbf{At payment-only dates} ($t \in \mathcal{T}_p \setminus \mathcal{T}_c$):
+    \begin{equation}
+        V(t, S) = e^{-r \Delta t} \mathbb{E} \left[ V(t', S') \mid S(t) = S \right] + K N \Delta t
+    \end{equation}
+    
+    \item \textbf{At all other dates} (neither payment nor conversion):
+    \begin{equation}
+        V(t, S) = e^{-r \Delta t} \mathbb{E} \left[ V(t', S') \mid S(t) = S \right]
+    \end{equation}
+\end{itemize}
+
+This formulation allows for a flexible specification of conversion opportunities, ranging from a few specific dates to continuous conversion.
+
+\vspace{1.5cm}
+
+\subsection{Implementation with Regression Monte Carlo}
+
+To implement this extended model, I adapt the Regression Monte Carlo algorithm to handle arbitrary conversion dates. The key modifications are:
+
+\begin{enumerate}
+    \item Maintain separate lists for coupon payment dates and conversion dates
+    \item At each time step, check whether it is a payment date, conversion date, or both
+    \item Apply the appropriate valuation formula based on the date type
+\end{enumerate}
+
+The algorithm proceeds as before, with backward induction and regression to estimate continuation values, but now with more granular handling of different date types.
+
+I consider several conversion scenarios:
+
+\begin{enumerate}
+    \item \textbf{Coupon dates only}: Conversion allowed only at semiannual coupon payment dates (original case)
+    \item \textbf{Monthly conversion}: Conversion allowed every month
+    \item \textbf{American-style}: Conversion allowed at any time (approximating continuous conversion)
+    \item \textbf{Specific arbitrary dates}: Conversion allowed at a set of predefined dates
+\end{enumerate}
+
+\subsection{Results and Analysis}
+
+Using the same base parameters as before, I obtain the following results for different conversion frequency scenarios:
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{lc}
+        \toprule
+        Option Exercise Dates & \( V(0, S_0) \) \\
+        \midrule
+        Specific arbitrary dates (once a year) & 1049.0769 \\
+        Coupon dates only         & 1064.9177 \\
+        Monthly opportunities     & 1096.3922 \\
+        American-style (any time)           & 1116.1382 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Comparison of \( V(0, S_0) \) under Different Exercise Opportunities}
+    \label{tab:bond_valuation}
+\end{table}
+
+As shown in Table \ref{tab:bond_valuation}, the price difference between semiannual and American-style conversion is approximately 51.22, or 5.12\% of the face value. This represents the maximum flexibility premium that a bondholder would be willing to pay for continuous conversion rights. Furthermore, the specific dates scenario shows a lower price than the base case. This is because the chosen dates provide fewer optimal conversion opportunities than the standard coupon dates.
+
+
